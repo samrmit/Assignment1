@@ -27,160 +27,112 @@ public class Driver {
             }
             case 2: { //select a person
 
-                displayNet();
-                System.out.println("Select a person by entering a name from above list:");
-                String name = sc.next();
-                curPerson = getPerson(name);
-
-                if (curPerson != null) {
-                    System.out.println("You selected " + curPerson.getName());
-                    subMenuAction();
-
-                } else {
-                    System.out.println("Invalid name:");
-                    menuAction(option);
-
-                }
-
-
+                selectPerson(option);
+                break;
             }
-            case 3: {
-                displayNet();
-                System.out.println("Enter two names (you will be prompted twice to enter two names) :");
-                System.out.println("Enter name of first user :");
-                String f1 = sc.next();
-                Person P1 = getPerson(f1);
+            case 3: { //Check given two users are friends
+                checkFriends(option);
+                break;
+            }
 
-                if(P1 != null){
-                    System.out.println("Enter name of second user :");
-                    String f2 = sc.next();
-                    Person P2 = getPerson(f2);
-                    if(P2 != null){
-
-                        if(P1.isFriendOf(P2)){
-                            System.out.println(P1.getName() + " and " + P2.getName() + " are friends.");
-                        }else{
-                            System.out.println(P1.getName() + " and " + P2.getName() + " are not friends.");
-
-                        }
-                        topLevelHandler();
-                        break;
-                    }else{
-                        System.out.println("Invalid name :");
-                        menuAction(option);
-                    }
-
-
-                }else{
-                    System.out.println("Invalid name :");
-                    menuAction(option);
-                }
-
-            }// case 3 ends
-
-            case 4: {
+            case 4: { //exit program
                 System.out.println("\nYou quit the MiniNet");
                 System.exit(0);
             }// case 4 ends
         } // switch ends
     }// menuAction() ends
 
-
     private void subMenuAction() {
 
         System.out.print("\nCurrent user: " + curPerson.getName());
         int choice = getSubMenu(sc);
-
-        if(choice == 1){
+        if (choice == 1) {
             System.out.println("\n--------------------------");
             curPerson.viewDetails();
             System.out.println("\n--------------------------");
             subMenuAction();
 
         } else if (choice == 2) { //Add a friend
+            addFriend();
 
-            displayNet();
-            System.out.println("Select a name to be friend with " + curPerson.getName());
-            String nameAdd = sc.next();
-
-            Person newPerson1 = getPerson(nameAdd);
-
-            if (newPerson1 != null) {
-
-                System.out.println("Friends of " + curPerson.getName());
-                System.out.println(curPerson.showFriends());
-
-                if(curPerson.addedTo(newPerson1)) {
-                    updateAllProfilesList(curPerson);
-                    updateAllProfilesList(newPerson1);
-                }
-
-                System.out.println("Current friends of " + curPerson.getName());
-                System.out.println(curPerson.showFriends());
-
-                subMenuAction();
-
-            } else {
-                System.out.println("Sorry, " + nameAdd + " is not a valid network user. Enter a name from below list.");
-
-                subMenuAction();
-
-            }
 
         } else if (choice == 3) { //Delete a friend
 
-            displayNet();
-            System.out.println("Select a name to be deleted with" + curPerson.getName());
-            String nameDel = sc.next();
+            deleteFriend();
 
-            Person newPerson2 = getPerson(nameDel);
-
-            if (newPerson2 != null) {
-
-                System.out.println("Friends of " + curPerson.getName());
-                System.out.println(curPerson.showFriends());
-
-                if(curPerson.deletedFrom(newPerson2)) {
-                    updateAllProfilesList(curPerson);
-                    updateAllProfilesList(newPerson2);
-                }
-
-                System.out.println("Current friends of " + curPerson.getName());
-                System.out.println(curPerson.showFriends());
-
-            } else {
-                System.out.println("Sorry, " + nameDel + " is not a valid network user.");
-                subMenuAction();
-            }
-
-
-        } else if (choice == 4) { //show friends' details
-            System.out.println("Friends of " +curPerson.getName() + " : " + curPerson.showFriends());
-            System.out.println("Enter a friend's name to get details");
-            String nameLook = sc.next();
-
-            Person newPerson3 = getPerson(nameLook);
-
-            if (newPerson3 != null){
-                if(curPerson.isFriendOf(newPerson3)){
-                    System.out.println("\n--------------------------");
-                    newPerson3.viewDetails();
-                    System.out.println("\n--------------------------");
-                }else{
-                    System.out.println("Entered user is not a friend of "+curPerson.getName());
-                }
-            }else{
-                System.out.println("Not a valid user.");
-            }
-            subMenuAction();
-
-    } else if (choice == 5) {
+        } else if (choice == 5) {
             topLevelHandler();
 
-    }else if (choice == 6) {
+        } else if (choice == 6) {
             menuAction(4);
         }
 
+    }
+
+    private void addFriend() {
+        displayNet();
+        System.out.println("Select a name you want to make friend with " + curPerson.getName());
+        String nameAdd = sc.next();
+
+        Person newPerson1 = getPerson(nameAdd);
+
+        if( curPerson== newPerson1){
+            System.out.println("You must select a person other than " + curPerson.getName());
+            subMenuAction();
+        }
+
+        if (newPerson1 != null) {
+
+            System.out.println("Friends of " + curPerson.getName());
+            System.out.println(curPerson.showFriends());
+
+            if (curPerson.addedTo(newPerson1)) {
+                updateAllProfilesList(curPerson);
+                updateAllProfilesList(newPerson1);
+            }
+
+            System.out.println("Current friends of " + curPerson.getName());
+            System.out.println(curPerson.showFriends());
+
+            subMenuAction();
+
+        } else {
+            System.out.println("Sorry, " + nameAdd + " is not a valid network user. Enter a name from below list.");
+            subMenuAction();
+
+        }
+
+    }
+
+    private void deleteFriend() {
+        displayNet();
+        System.out.println("Select a name to be deleted with" + curPerson.getName());
+        String nameDel = sc.next();
+
+        Person newPerson2 = getPerson(nameDel);
+
+        if( curPerson== newPerson2){
+            System.out.println("You must select a person other than " + curPerson.getName());
+            subMenuAction();
+        }
+
+        if (newPerson2 != null) {
+
+            System.out.println("Friends of " + curPerson.getName());
+            System.out.println(curPerson.showFriends());
+
+            if (curPerson.deletedFrom(newPerson2)) {
+                updateAllProfilesList(curPerson);
+                updateAllProfilesList(newPerson2);
+            }
+
+            System.out.println("Current friends of " + curPerson.getName());
+            System.out.println(curPerson.showFriends());
+
+        } else {
+            System.out.println("Sorry, " + nameDel + " is not a valid network user.");
+            subMenuAction();
+        }
     }
 
     private void displayNet() {
@@ -188,22 +140,64 @@ public class Driver {
         for (int i = 0; i < allProfiles.length; i++) {
             String userType = null;
 
-             if(allProfiles[i] instanceof Adult){
-                 userType = "Adult";
-             }else{
-                 userType = "Dependant";
-             }
+            if (allProfiles[i] instanceof Adult) {
+                userType = "Adult";
+            } else {
+                userType = "Dependant";
+            }
 
-            System.out.println("Name: " + allProfiles[i].getName() + " (Type: " +userType+ " )");
+            System.out.println("Name: " + allProfiles[i].getName() + " (Type: " + userType + " )");
         }
     }
 
-    private Person findPerson(String name) { // To get the Person position from the array based on his/her name
-        for (int i = 0; i < allProfiles.length; i++) {
-            if (allProfiles[i].getName().toLowerCase() == name.trim().toLowerCase())
-                return allProfiles[i];
+    private void checkFriends(int option) {
+        displayNet();
+        System.out.println("Enter two names (you will be prompted twice to enter two names) :");
+        System.out.println("Enter name of first user :");
+        String f1 = sc.next();
+        Person P1 = getPerson(f1);
+
+        if (P1 != null) {
+            System.out.println("Enter name of second user :");
+            String f2 = sc.next();
+            Person P2 = getPerson(f2);
+            if (P2 != null) {
+
+                if (P1.isFriendOf(P2)) {
+                    System.out.println(P1.getName() + " and " + P2.getName() + " are friends.");
+                } else {
+                    System.out.println(P1.getName() + " and " + P2.getName() + " are not friends.");
+
+                }
+                topLevelHandler();
+            } else {
+                System.out.println("Invalid name :");
+                menuAction(option);
+            }
+
+
+        } else {
+            System.out.println("Invalid name :");
+            menuAction(option);
         }
-        return null;
+
+    }
+
+    private void selectPerson(int option) {
+        displayNet();
+        System.out.println("Select a person by entering a name from above list:");
+        String name = sc.next();
+        curPerson = getPerson(name);
+
+        if (curPerson != null) {
+            System.out.println("You selected " + curPerson.getName());
+            subMenuAction();
+
+        } else {
+            System.out.println("Invalid name:");
+            menuAction(option);
+
+        }
     }
 
     private static int getMainMenu(Scanner sc) {
@@ -237,7 +231,6 @@ public class Driver {
 
         return opt1;
     }
-
 
     private static int getSubMenu(Scanner sc) {
         int opt2 = 0;
@@ -274,14 +267,13 @@ public class Driver {
         return opt2;
     }
 
-
     public void drive() {
 
         allProfiles[0] = new Adult("Alice", 25, "Alice.photo", "Doctor", new String[]{"James", "Ron"},
                 new String[]{"Ben"});
         allProfiles[1] = new Adult("James", 22, "James.photo", "Lecturer", new String[]{"Alice"},
                 new String[]{"Ben"});
-          allProfiles[2] = new Adult("Ronald", 35, "Ronald.photo", "Teacher", new String[]{null},
+        allProfiles[2] = new Adult("Ronald", 35, "Ronald.photo", "Teacher", new String[]{null},
                 new String[]{null});
         allProfiles[3] = new Adult("Anne", 32, "Anne.photo", "Dancer", new String[]{"Sam"},
                 new String[]{"Steve"});
@@ -301,8 +293,7 @@ public class Driver {
         topLevelHandler();
     }
 
-
-    Person getPerson(String personName) {
+    private Person getPerson(String personName) {
         for (Person psn : allProfiles) {
             if (psn.getName().toLowerCase().equals(personName.trim().toLowerCase())) {
                 return psn;
@@ -311,9 +302,9 @@ public class Driver {
         return null;
     }
 
-    public void updateAllProfilesList(Person P) {
+    private void updateAllProfilesList(Person P) {
 
-        for (int i = 0; i < allProfiles.length; i++){
+        for (int i = 0; i < allProfiles.length; i++) {
 
             if (allProfiles[i].getName().toLowerCase().equals(P.getName())) {
                 allProfiles[i] = P;

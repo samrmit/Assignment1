@@ -29,6 +29,11 @@ public class Adult extends Person {
 
     }
 
+    public void addPerson(String adName, int adAge) {
+
+
+    }
+
     public void viewDetails(){
         super.viewDetails();
         System.out.println("Children list: " +showChildren());
